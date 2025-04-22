@@ -3,8 +3,12 @@
 import os
 import platform
 import subprocess
-import distutils.spawn
 from vex import exceptions
+
+try:
+    from shutil import which
+except ImportError:
+    from distutils.spawn import find_executable as which
 
 
 def get_environ(environ, defaults, ve_path):
@@ -71,7 +75,7 @@ def run(command, env, cwd):
     if cwd:
         assert os.path.exists(cwd)
     if platform.system() == "Windows":
-        exe = distutils.spawn.find_executable(command[0], path=env["PATH"])
+        exe = which(command[0], path=env["PATH"])
         if exe:
             command[0] = exe
     _, command_name = os.path.split(command[0])

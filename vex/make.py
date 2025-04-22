@@ -1,8 +1,12 @@
 import os
 import sys
-import distutils.spawn
 from vex.run import run
 from vex import exceptions
+
+try:
+    from shutil import which
+except ImportError:
+    from distutils.spawn import find_executable as which
 
 
 PYDOC_SCRIPT = """#!/usr/bin/env python
@@ -47,7 +51,7 @@ def handle_make(environ, options, make_path):
     args = [ve, make_path]
     if options.python:
         if os.name == "nt":
-            python = distutils.spawn.find_executable(options.python)
+            python = which(options.python)
             if python:
                 options.python = python
         args += ["--python", options.python]
